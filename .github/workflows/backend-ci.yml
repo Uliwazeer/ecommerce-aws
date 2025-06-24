@@ -1,15 +1,17 @@
-name: Backend CI
+name: Backend CI 🧪
 
 on:
   push:
+    branches: [ main ]
     paths:
       - 'backend/**'
   pull_request:
+    branches: [ main ]
     paths:
       - 'backend/**'
 
 jobs:
-  test:
+  build-and-run:
     runs-on: ubuntu-latest
 
     defaults:
@@ -17,7 +19,7 @@ jobs:
         working-directory: ./backend
 
     steps:
-      - name: ⬇️ Checkout Repo
+      - name: ⬇️ Checkout Code
         uses: actions/checkout@v3
 
       - name: 🟢 Setup Node.js
@@ -28,9 +30,21 @@ jobs:
       - name: 📦 Install Dependencies
         run: npm install
 
-      - name: ✅ Run Lint or Test (optional)
+      - name: ✅ Run Lint / Tests
         run: |
-          echo "🧪 No tests yet, but you can add npm test here"
+          echo "🧪 No tests yet"
 
-      - name: 🐳 Docker Build Test
+      - name: 🐳 Docker Build
         run: docker build -t test-ecommerce-backend .
+
+      - name: 🚀 Run Docker Container Locally
+        run: |
+          docker run -d -p 5000:5000 --name backend-container test-ecommerce-backend
+          sleep 5 # wait for server to boot
+          curl --fail http://localhost:5000 || (echo "❌ App failed to start" && exit 1)
+
+      - name: 🧼 Cleanup Docker Container
+        if: always()
+        run: |
+          docker stop backend-container || true
+          docker rm backend-container || true
