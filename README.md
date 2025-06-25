@@ -110,6 +110,8 @@ docker run -p 5000:5000 aliwazeer/ecommerce-backend:latest
 
 ---
 
+## Live Demo  >> http://ecommerce-aws-frontend.s3-website-us-east-1.amazonaws.com/
+
 ## ✅ GitHub Actions CI/CD
 
 GitHub Actions workflow `backend-ci.yml` automates backend test builds:
